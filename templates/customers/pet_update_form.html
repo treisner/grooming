@@ -1,0 +1,21 @@
+
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap3 %}
+<h2>Change Pet</h2>
+<form class="form-inline" method="post">
+
+    {% include "customers/button_save.html" %}
+    {% include "customers/button_cancel.html" %}
+    <br><br>
+<div class="well well-sm">
+  {% crispy form %}
+</div>
+<a href='/appointments/?when=Future&pet={{ pet.id }}' class="btn btn-default"><span class="glyphicon glyphicon-list" aria-hidden="true" title="List Appointments"></span>&nbsp;List Appointments</a>
+{% url 'freetime' pet.id as freetime_url %}
+<a href='{{ freetime_url }}' class="btn btn-default"><span class="glyphicon glyphicon-calendar" aria-hidden="true" title="Make Appointment"></span>&nbsp;Make Appointment</a>
+
+
+</form>
+{% endblock %}

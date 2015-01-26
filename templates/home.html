@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+<script type="text/javascript"
+    src="http://code.jquery.com/jquery-1.10.1.min.js">
+</script>
+
+<script>
+    $(document).ready(
+
+            function() {
+                setInterval(function() {
+                    $('#time').load('time')
+                }, 10000);
+
+            })
+
+</script>
+
+<style>
+.asteriskField {display: none;}
+</style>
+
+{% include 'time.html' %}
+
+<div class="well well-sm" id="today">
+    <h3>Today's Appointments</h3>
+    <table class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th>When</th>
+        <th>Customer</th>
+        <th>Pet</th>
+        <th>To Do</th>
+        <th>Total</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for appt in appts %}
+            <tr>
+            <td title="Update Appointment">
+                <strong>
+                    <a href='appointment/{{ appt.pk }}/'>
+                        {{ appt.when }}
+                    </a>
+                </strong>
+            </td>
+            <td title="Update {{ appt.pet.owner.first_name }}">
+                <strong>
+                    <a href='customer/{{ appt.pet.owner.pk }}'>
+                         {{ appt.pet.owner.name }}
+                    </a>
+                </strong>
+            </td>
+            <td title="Update {{ appt.pet.name }}">
+                <strong><a href='pet/{{ appt.pet.pk }}/'>
+                        {{ appt.pet.name }}
+                    </a>
+                </strong>
+            </td>
+            <td>{{ appt.todo }}</td>
+            <td>{{ appt.total }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+</div>
+<div class="well well-sm" id="made">
+    <h3>Last 5 Appointments Made</h3>
+    <table class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th>When</th>
+        <th>Customer</th>
+        <th>Pet</th>
+        <th>To Do</th>
+    </tr></thead>
+    <tbody>
+    {% for appt in last %}
+            <tr>
+            <td title="Update Appointment">
+                <strong>
+                    <a href='appointment/{{ appt.pk }}/'>
+                        {{ appt.when }}
+                    </a>
+                </strong>
+            </td>
+            <td title="Update {{ appt.pet.owner.first_name }}">
+                <strong>
+                    <a href='customer/{{ appt.pet.owner.pk }}'>
+                        {{ appt.pet.owner.name }}
+                    </a>
+                </strong>
+            </td>
+            <td title="Update {{ appt.pet.name }}">
+                <strong>
+                    <a href='pet/{{ appt.pet.pk }}/'>
+                        {{ appt.pet.name }}
+                    </a>
+                </strong>
+            </td>
+            <td>{{ appt.todo }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+</div>
+<div class="well well-sm" id="made">
+    <h3>Last 5 Calls</h3>
+    <table class="table table-condensed table-hover"><thead>
+    <tr>
+        <th>Called at</th>
+        <th>Phone Number</th>
+        <th>Caller ID</th>
+        <th>Customer</th>
+    </tr></thead>
+    <tbody>
+    {% for call in calls %}
+        {% if call.customer.pk > -1 %}
+            <tr class="info">
+            {% else %}
+            <tr>
+            {% endif %}
+            <td><small>{{ call.rang_at }}</small></td>
+            <td><small>{{ call.phone_number }}</small></td>
+            <td><small>{{ call.caller_id_name }}</small></td>
+            {% if call.customer.pk > -1 %}
+                <td title="Update {{ call.customer.first_name }}"><strong><a href='customer/{{ call.customer.pk }}'>
+                    {{ call.customer }}
+                    </a></strong>
+                </td>
+                {% else %}
+                <td>
+                    <a href="/customer/create/?phone={{ call.phone_number }}&name={{call.caller_id_name }}" class="btn btn-default btn-xs" title="Add {{call.caller_id_name }} as a Customer">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true" ></span>&nbsp;Add as Customer
+                    </a>
+                </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap3 %}
+<h2>Breeds {% if query_string %}- Search results for {{ query_string }}{% endif %}</h2>
+
+<form method="get">
+    {% include 'customers/search.html' %}
+    <button type="submit" name="submit" value="Add" class="btn btn-default" id="submit-id-add" action="/breed/add">
+        <span class="glyphicon glyphicon-plus" aria-hidden="true" Title="Add a Breed"></span>
+        Add a Breed
+    </button>
+</form>
+{% if breed_list %}
+    <div class="well well-sm">
+    <table class="table table-striped table-condensed">
+    <thead>
+        <tr>
+            <td>Breed</td>
+            <td>Size</td>
+            <td>Notes</td>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for breed in breed_list %}
+            {% if breed.id > -1 %}
+            <tr>
+                <td title="Update {{ breed.breed }}">
+                    <strong>
+                        <a href="/breed/{{ breed.id }}/" class="see_detail">
+                            {{ breed.breed }}
+                        </a>
+                    </strong>
+                </td>
+                <td>{{ breed.size}}</td>
+                <td><textarea readonly="True" rows="1" cols="75">{{ breed.description}}</textarea></td>
+                    <td>
+                <a href="/breed/delete/{{ breed.id }}/">&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-trash" aria-hidden="true" Title="Delete {{ breed.breed }}"></span></a>
+                </td>
+
+            </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody></table></div>
+
+
+    {% include 'customers/paginator.html' %}
+
+{% else %}
+    <p style="color:red">No Breeds found.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,24 @@
+
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap3 %}
+<h2>Change Breed</h2>
+<form method="post">
+{{ object_list }}
+<style>
+#div_id_picture > div > a
+    {padding-right: 10px ;}
+#id_picture {margin-left: 40%}
+</style>
+<div class="well">
+    {% if form.picture.value %}
+        <img src='{{ MEDIA_URL }}{{ form.picture.value }}'>
+    {% endif %}
+  {% crispy form helper %}
+    {% include "customers/button_save.html" %}
+    {% include "customers/button_cancel.html" %}
+
+</div>
+</form>
+{% endblock %}

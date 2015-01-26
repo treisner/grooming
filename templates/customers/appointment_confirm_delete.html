@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap3 %}
+
+<h3>Are you sure you want to delete the appointment for {{ object.pet.name }} on {{ object.when }}?</h3>
+
+<form class="form-inline" method="post">
+    {% crispy form %}
+</form>
+{% endblock %}

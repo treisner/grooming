@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap3 %}
+<h2>Pets {% if query_string %}- Search results for {{ query_string }}{% endif %}</h2>
+    
+<form method="get">
+    {% include 'customers/search.html' %}
+</form>
+
+{% if pet_list %}
+    <div class="well well-sm">
+    <table class="table table-striped table-condensed">
+    <thead>
+        <tr>
+            <th>List</th>
+            <th>New</th>
+            <th>Name</th>
+            <th>Owner</th>
+            <th>Breed</th>
+        </tr>
+  </thead>
+    <tbody>
+        {% for pet in pet_list %}
+            {% if pet.id > -1 %}
+            <tr>
+            <td>
+                <a href='/appointments/?when=Future&pet={{ pet.id }} '>
+                    <span class="glyphicon glyphicon-list" aria-hidden="true" title="List Appointments for {{ pet.name }}"></span>
+                </a>
+            </td>
+            <td>
+                <a href='{% url 'freetime' pet.id %}'>
+                    <span class="glyphicon glyphicon-calendar" aria-hidden="true" title="Make an Appointment for {{ pet.name }}"></span>
+                </a>
+            </td>
+            <td>
+                <strong>
+                    <a href="/pet/{{ pet.id }}/" class="see_detail" title="Update {{ pet.name }}">
+                        {{ pet.name }}
+                    </a>
+                </strong>
+            </td>
+            <td title="Update {{ pet.owner.first_name }}">
+                <strong>
+                    <a href="/customer/{{ pet.owner.pk }}/" class="see_detail">
+                        {{ pet.owner}}
+                    </a>
+                </strong>
+            </td>
+            <td>{{ pet.breed}}</td>
+
+            </tr>
+            {% endif %}
+        {% endfor %}
+
+    </tbody></table></div>
+
+{% include 'customers/paginator.html' %}
+{% else %}
+
+    <p style="color:red">No pets found.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,58 @@
+
+{% load static %}
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" id="myModalHeader">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Someone is calling&hellip;</h4>
+      </div>
+      <div class="modal-body" id="myModalBody">
+        <p class="text-center" id="callernumber">Caller Number</p>
+        <p class="text-center" id="callername">Caller Name</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <a href="/" id="custbutton" type="button" class="btn btn-default">
+            innerHTML to be replaced
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="{% static 'omnibus/omnibus.min.js' %}"></script>
+
+<script>
+var transport = WebSocket;
+var endpoint = '{{ OMNIBUS_ENDPOINT }}';
+var options = {
+    // Get the omnibus authentication token:
+    authToken: '{{ OMNIBUS_AUTH_TOKEN }}'
+};
+
+
+var connection = new Omnibus(transport, endpoint, options);
+var channel = connection.openChannel('callerid');
+channel.on('caller',function (event){
+
+    if (event.data.payload.custtype == 'New') {
+        document.getElementById('custbutton').innerHTML = '<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>&nbsp;Add as Customer';
+        document.getElementById('myModalHeader').style.backgroundColor = 'lightpink';
+    } else {
+        document.getElementById('custbutton').innerHTML = '<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>&nbsp;View Customer';
+        document.getElementById('myModalLabel').innerHTML = "A Grooming Customer is Calling";
+        document.getElementById('myModalHeader').style.backgroundColor = 'lightgreen';
+    }
+        document.getElementById('custbutton').href = event.data.payload.url;
+        document.getElementById('callername').innerHTML = event.data.payload.customer;
+        document.getElementById('callernumber').innerHTML = "Call from "
+            +event.data.payload.callername+" at "+event.data.payload.callernumber;
+     $('#myModal').modal('show')
+});
+
+
+</script>
+

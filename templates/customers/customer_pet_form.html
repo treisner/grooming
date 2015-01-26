@@ -1,0 +1,76 @@
+{% load crispy_forms_tags %}
+{% load crispy_forms_utils %}
+
+{% specialspaceless %}
+{% if formset_tag %}
+<form {{ flat_attrs|safe }} method="{{ form_method }}" {% if formset.is_multipart %} enctype="multipart/form-data"{% endif %}>
+{% endif %}
+    {% if formset_method|lower == 'post' and not disable_csrf %}
+        {% csrf_token %}
+    {% endif %}
+
+    <div>
+        {{ formset.management_form|crispy }}
+    </div>
+
+    {% include "bootstrap/errors_formset.html" %}
+
+    {% for form in formset %}
+        <div class="accordion" id="accordion">
+        <div class="accordion-group">
+        <div class="accordion-heading">
+            <h4><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#{{ form.name.value }}">
+                {% if form.name.value %}
+                     For {{ form.name.value|title }} &hellip;
+                            {% if form_list %}
+                                <a class='btn btn-default' href='/appointments/?when=Future&pet={{  form.id.value }}'>
+                                    <span class="glyphicon glyphicon-list" aria-hidden="true" title="List Appointments"></span>
+                                    &nbsp;List Appointments
+                                </a>
+                            {% endif %}
+
+                            {% if form_freetime %}
+                                {% url 'form_freetime' form.id.value as freetime_url %}
+                                <a class='btn btn-default' href='{{ freetime_url }}'>
+                                    <span class="glyphicon glyphicon-calendar" aria-hidden="true" title="Make a new appointment"></span>
+                                    &nbsp;New Appointment
+                                </a>
+                            {% endif %}
+
+                            {% if form_edit %}
+                                {% url 'form_edit' form.id.value as edit_url %}
+                                <a href='{{  edit_url }}'><span class="glyphicon glyphicon-edit" aria-hidden="true" title="Update"></span>&nbsp;</a>
+                            {% endif %}
+
+                            {% if form_delete %}
+                                {% url 'form_delete' form.id.value as delete_url %}
+                                <a href='{{ delete_url }}'><span class="glyphicon glyphicon-trash" aria-hidden="true" Title="Delete"></span></a>
+                            {% endif %}
+
+                {% else %}
+                    <button  class="btn btn-default" >
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true" title="Add as Customer"></span>
+                        &nbsp;Add a Pet
+                    </button>
+                {% endif %}
+            </a></h4>
+                {% if form.id.value %}
+                    {% if form_delete %}<a href='{% url 'form_delete' form.id.value %}'><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>{% endif %}
+                {% endif %}
+
+        </div>
+        <div id="{{ form.name.value}}" class="accordion-body collapse {% if form.name.value %} in{% endif %}" >
+        <div class="accordion-inner">
+        {% include "bootstrap/display_form.html" %}
+        </div></div></div></div>
+    {% endfor %}
+
+    {% if inputs %}
+        <div class="form-actions">
+            {% for input in inputs %}
+                {% include "bootstrap/layout/baseinput.html" %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% if formset_tag %}</form>{% endif %}
+{% endspecialspaceless %}

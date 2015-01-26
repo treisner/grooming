@@ -1,0 +1,55 @@
+{% if is_paginated %}
+    {% load extra_tags %}
+    {% make_variable paginator.num_pages as totpages %}
+    {% make_variable 5 as maxtoshow %}
+    {% start_page maxtoshow as startpage %}
+    {% end_page startpage maxtoshow as endpage %}
+
+    <nav>
+    <ul class="pagination pagination-sm">
+
+        {% if page_obj.has_previous %}
+            <li><a href="?page=1">
+        {% else %}
+            <li class="disabled"><a href="#">
+        {% endif %}
+        <span class="glyphicon glyphicon-fast-backward" aria-hidden="true" title="Go to first page"></span>
+        </a>
+        </li>
+
+        {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number  }}">
+        {% else %}
+            <li class="disabled"><a href="#">
+        {% endif %}
+        <span class="glyphicon glyphicon-backward" aria-hidden="true" title="Go to back a page"></span>
+        </a>
+        </li>
+
+        {% for i in paginator.page_range %}
+            {% if i >= startpage and i <= endpage %}
+                <li {% if page_obj.number == i %} class="active" title="Now on page {{ i }}"{% else %} title="Go to page {{ i }}" {% endif %} ><a href="?page={{i}}">{{i}}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}">
+        {% else %}
+            <li class="disabled"><a href="#">
+        {% endif %}
+        <span class="glyphicon glyphicon-forward" aria-hidden="true" title="Go to the next page"></span>
+        </a>
+        </li>
+
+        {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.paginator.num_pages }}">
+        {% else %}
+            <li class="disabled"><a href="#">
+        {% endif %}
+        <span class="glyphicon glyphicon-fast-forward" aria-hidden="true" title="Go to the last page"></span>
+        </a>
+        </li>
+
+    </ul>
+    </nav>
+{% endif %}

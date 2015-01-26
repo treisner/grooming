@@ -1,0 +1,78 @@
+
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap3 %}
+<h2> {% if query_string %}{{ query_string }}&nbsp;{% endif %}Appointments{% if pet_name %}&nbsp;for&nbsp;{{ pet_name }}{% endif %}</h2>
+
+{% if appointment_list %}
+    <div class="well well-sm">
+    <table class="table table-striped table-condensed">
+    <thead>
+        <tr>
+            <td>When</td>
+            <td>Pet</td>
+            <td>Customer</td>
+            <td>Services</td>
+            <td>Total</td>
+            <td>Delete</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for appointment in appointment_list %}
+            {% if appointment.id > -1 %}
+            <tr>
+                <td title="Update Appointment">
+                    <strong>
+                        <a href="/appointment/{{ appointment.id }}/" class="see_detail">
+                            {{ appointment.when }}
+                        </a>
+                    </strong>
+                </td>
+                <td title="Update {{ appointment.pet.name }}">
+                    <strong>
+                        <a href="/pet/{{ appointment.pet.id }}/" class="see_detail">
+                            {{ appointment.pet}}
+                        </a>
+                    </strong>
+                </td>
+                <td title="Update {{ appointment.pet.owner.first_name }}">
+                    <strong>
+                        <a href="/customer/{{ appointment.pet.owner.id }}/" class="see_detail">
+                            {{ appointment.pet.owner}}
+                        </a>
+                    </strong>
+                </td>
+                <td>{{ appointment.todo }}</td>
+                <td>{{ appointment.total }}</td>
+                    <td>
+                <a href="/appointment/delete/{{ appointment.id }}/">&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-trash" aria-hidden="true" Title="Delete this Appointment"></span></a>
+                </td>
+
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody></table></div>
+
+
+    {% include 'customers/paginator.html' %}
+
+{% else %}
+    <p style="color:red">No Appointments found.</p>
+{% endif %}
+{% if query_string == "Future" %}
+
+        <a class="btn btn-default" type="submit" value="Past Appointments" href="/appointments/?when=Past{% if pet_id %}&pet={{ pet_id }}{% endif %}">
+        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true" Title="Past"></span>
+        <span class="glyphicon glyphicon-time" aria-hidden="true" Title="Past"></span>&nbsp;Past Appointments
+        </a>
+
+{% elif query_string == "Past" %}
+
+        <a class="btn btn-default" type="submit" value="Future Appointments" href="/appointments/?when=Future{% if pet_id %}&pet={{ pet_id }}{% endif %}">
+        <span class="glyphicon glyphicon-time" aria-hidden="true" Title="Future"></span>
+        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true" Title="Future"></span>&nbsp;Future Appointments
+        </a>
+
+{% endif %}
+{% endblock %}

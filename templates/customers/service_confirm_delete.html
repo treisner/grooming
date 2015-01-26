@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap3 %}
+<h2>Are you sure you want to delete this Service: "{{ object }}"?</h2>
+{% crispy form %}
+{% endblock %}

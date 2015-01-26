@@ -1,0 +1,16 @@
+
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap3 %}
+<h3>Services</h3>
+
+<form class="form-inline" method="post">
+    {% include "customers/button_save.html" %}
+    {% include "customers/button_cancel.html" %}
+    <br><br>
+    <div class="well well-sm">
+    {% crispy form%}
+        </div>
+</form>
+{% endblock %}

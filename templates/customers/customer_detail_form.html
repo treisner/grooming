@@ -1,0 +1,17 @@
+
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load bootstrap3 %}
+{% block content %}
+<h2>{{ form.first_name.value }}'s Information</h2>
+<form class="form-inline" method="post">
+    {% include "customers/button_save.html" %}
+    {% include "customers/button_cancel.html" %}<br><br>
+    <div class="well well-sm">
+    {% crispy form  %}
+        </div>
+    <h3>{{ form.first_name.value }}'s Pets</h3>
+    {% crispy customerpet_form helper %}
+</form>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% load bootstrap3 %}
+<h2>Calls {% if query_string %}- Search results for {{ query_string }}{% endif %}</h2>
+    
+<form method="get">
+    {% include 'customers/search.html' %}
+</form>
+
+{% if call_list %}
+     <div class="well well-sm">
+    <table class="table table-striped table-condensed">
+    <thead>
+        <tr>
+            <td>Customer</td>
+            <td>Caller ID</td>
+            <td>Phone Number</td>
+            <td>Called at</td>
+        </tr>
+  </thead>
+    <tbody>
+        {% for call in call_list %}
+            {% if call.id > -1 %}
+            <tr>
+                <td>
+                    {% if call.customer.id > -1 %}
+                        <strong>
+                            <a href="/customer/{{ call.customer.pk }}/" class="see_detail">
+                                {{ call.customer}}
+                            </a>
+                        </strong>
+                    {% else %}
+                    <a href="/customer/create/?phone={{ call.phone_number }}&name={{call.caller_id_name }}" class="btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true" title="Add as Customer"></span>&nbsp;Add as Customer
+                    </a>
+                    {% endif %}
+                </td>
+                <td>{{ call.caller_id_name}}</td>
+                <td>{{ call.phone_number }}</td>
+                <td>{{ call.rang_at }}</td>
+
+            </tr>
+            {% endif %}
+        {% endfor %}
+
+    </tbody></table></div>
+
+{% include 'customers/paginator.html' %}
+{% else %}
+
+    <p>No calls found.</p>
+{% endif %}
+
+{% endblock %}

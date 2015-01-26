@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load bootstrap3 %}
+{% block content %}
+
+    <title>Grooming Free Time</title>
+    <style type=text/css>
+      td  { vertical-align: top; padding: 0.5em }
+      img { border:0 }
+    </style>
+
+    <div><h2>Pick a time to groom {{ petname }}</h2></div>
+    <div class="well well-sm">
+    <table border=1>
+        <tr>
+        {% for date in dates %}
+            <td>{{  date }}</td>
+        {% endfor %}
+        </tr>
+        <tbody>
+        {% for d in opentimes %}  <tr>
+            {% for t in d %}
+                <td><strong><a href='/appointment/create/{{ petid }}/{{ t.0 }}/{{ t.1 }}'>{{t.1}}</a></strong></td>
+                {% endfor %} </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+    <br>
+    <form method="get">
+        <button class="btn btn-default"  type="submit" value="More Times"  formaction="/freetime/{{ petid }}/{{ weeks }}/next">
+        <span class="glyphicon glyphicon-time" aria-hidden="true" Title="More Times"></span>
+        <span  class="glyphicon glyphicon-arrow-right" aria-hidden="true" Title="More"></span>&nbsp;More Times
+        </button>
+
+    {% if weeks == '0' or weeks == 0 %}
+
+        <button class="btn btn-default" type="submit" value="More Times" formaction="/freetime/{{ petid }}/6">
+        <span class="glyphicon glyphicon-calendar" aria-hidden="true" Title="More Times"></span>
+        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true" Title="6 Weeks From Now"></span>&nbsp;Jump 6 Weeks
+        </button>
+
+    {% else %}
+
+        <button class="btn btn-default"  type="submit" value="More Times" formaction="/freetime/{{ petid }}">
+        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true" Title="Back to Start"></span>
+        <span  class="glyphicon glyphicon-calendar" aria-hidden="true" Title="More Times"></span>
+        &nbsp;Back to First Free Time
+        </button>
+    {% endif %}
+        </form>
+    {% include "customers/button_cancel.html" %}
+{% endblock %}

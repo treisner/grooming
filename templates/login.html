@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<form action='/accounts/auth/' method='POST'> {% csrf_token %}
+    <div >
+        <label for='username'> Username </label>
+        <input type='text' name='Username' id='username'>
+        <label for='password'>Password </label>
+        <input type='password' name='Password' id='password'>
+        <button class="btn btn-default" type="submit" value="login">
+            <span class="glyphicon glyphicon-ok" aria-hidden="true" Title="Login to our wonderful Grooming system!"></span>&nbsp;Login
+        </button>
+    </div>
+</form>
+{% endblock %}
